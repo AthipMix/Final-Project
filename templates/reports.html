@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block breadcrumb %}Reports{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div><div class="eyebrow">ANALYSIS HISTORY</div><h1>Reports</h1><p>ประวัติผลการวิเคราะห์ทั้งหมดที่บันทึกในระบบ</p></div>
+</div>
+
+<section class="panel filter-panel">
+    <form method="GET" class="filter-form">
+        <div class="form-group"><label>Project</label><select name="project_id"><option value="">All Projects</option>{% for p in projects %}<option value="{{ p.id }}" {% if filters.project_id == p.id|string %}selected{% endif %}>{{ p.name }}</option>{% endfor %}</select></div>
+        <div class="form-group"><label>Risk Level</label><select name="risk"><option value="">All Risks</option>{% for r in ['Low','Moderate','High','Critical'] %}<option value="{{ r }}" {% if filters.risk == r %}selected{% endif %}>{{ r }}</option>{% endfor %}</select></div>
+        <button class="btn btn-primary">Filter</button>
+        <a class="btn btn-light" href="{{ url_for('reports') }}">Reset</a>
+    </form>
+</section>
+
+<section class="panel">
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Date</th><th>Project</th><th>Rainfall</th><th>Runoff</th><th>Capacity</th><th>Utilization</th><th>Risk</th></tr></thead>
+        <tbody>
+        {% for row in analyses %}
+        <tr>
+            <td>{{ row.created_at }}</td>
+            <td><strong>{{ row.project_name }}</strong></td>
+            <td>{{ row.rainfall }} mm/hr</td>
+            <td>{{ "%.4f"|format(row.runoff) }} m³/s</td>
+            <td>{{ "%.4f"|format(row.pipe_capacity) }} m³/s</td>
+            <td>{{ "%.2f"|format(row.utilization) }}%</td>
+            <td><span class="risk-pill {{ row.risk_level|lower }}">{{ row.risk_level }}</span></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="empty">ไม่พบข้อมูลตามตัวกรอง</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Drainage System{% endblock %}
+{% block breadcrumb %}Drainage System{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div><div class="eyebrow">ASSET MANAGEMENT</div><h1>Drainage System</h1><p>จัดการข้อมูลท่อและอุปกรณ์ระบายน้ำ</p></div>
+    <button class="btn btn-primary" data-open-modal="assetModal">+ Add Asset</button>
+</div>
+
+<section class="panel">
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Asset Code</th><th>Project</th><th>Type</th><th>Location</th><th>Diameter</th><th>Condition</th><th></th></tr></thead>
+        <tbody>
+        {% for asset in assets %}
+        <tr>
+            <td><strong>{{ asset.asset_code }}</strong></td>
+            <td>{{ asset.project_name }}</td>
+            <td>{{ asset.asset_type }}</td>
+            <td>{{ asset.location }}</td>
+            <td>{{ asset.diameter }} m</td>
+            <td><span class="condition-pill {{ asset.condition|lower }}">{{ asset.condition }}</span></td>
+            <td>
+                <form method="POST" action="{{ url_for('delete_asset', asset_id=asset.id) }}" onsubmit="return confirm('ลบ Asset นี้หรือไม่?')">
+                    <button class="icon-btn danger">×</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="empty">ยังไม่มี Drainage Asset</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+
+<div class="modal" id="assetModal">
+    <div class="modal-box">
+        <button class="modal-close" data-close-modal>×</button>
+        <div class="eyebrow">NEW DRAINAGE ASSET</div>
+        <h2>เพิ่ม Asset</h2>
+        <form method="POST" action="{{ url_for('create_asset') }}">
+            <div class="form-group"><label>Project</label><select name="project_id" required>{% for p in projects %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}</select></div>
+            <div class="form-grid">
+                <div class="form-group"><label>Asset Code</label><input name="asset_code" required placeholder="PIPE-002"></div>
+                <div class="form-group"><label>Type</label><select name="asset_type"><option>Pipe</option><option>Drain</option><option>Channel</option><option>Culvert</option></select></div>
+                <div class="form-group"><label>Location</label><input name="location" required placeholder="Zone B"></div>
+                <div class="form-group"><label>Diameter (m)</label><input type="number" step="0.01" min="0.01" name="diameter" required></div>
+            </div>
+            <div class="form-group"><label>Condition</label><select name="condition"><option>Good</option><option>Fair</option><option>Poor</option></select></div>
+            <div class="form-group"><label>Notes</label><textarea name="notes" rows="3"></textarea></div>
+            <button class="btn btn-primary full">Save Asset</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

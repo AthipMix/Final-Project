@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Flood Risk Analysis{% endblock %}
+{% block breadcrumb %}Flood Risk Analysis{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">ENGINEERING CALCULATION</div>
+        <h1>Flood Risk Analysis</h1>
+        <p>คำนวณ Runoff, Pipe Capacity และระดับความเสี่ยง</p>
+    </div>
+</div>
+
+<div class="analysis-layout">
+    <section class="panel">
+        <div class="panel-header">
+            <div><h2>Analysis Input</h2><p>กรอกข้อมูลพื้นที่และระบบระบายน้ำ</p></div>
+        </div>
+
+        <form method="POST" id="analysisForm">
+            <div class="form-group">
+                <label>Project</label>
+                <select name="project_id" required>
+                    <option value="">เลือกโครงการ</option>
+                    {% for project in projects %}
+                    <option value="{{ project.id }}">{{ project.name }} — {{ project.location }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-section-title">Catchment Data</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Rainfall Intensity <span>mm/hr</span></label>
+                    <input type="number" step="0.01" min="0.01" name="rainfall" id="rainfall" placeholder="เช่น 100" required>
+                </div>
+                <div class="form-group">
+                    <label>Catchment Area <span>ha</span></label>
+                    <input type="number" step="0.01" min="0.01" name="area" id="area" placeholder="เช่น 2.5" required>
+                </div>
+                <div class="form-group">
+                    <label>Runoff Coefficient <span>C</span></label>
+                    <input type="number" step="0.01" min="0" max="1" name="runoff_coefficient" id="runoffCoefficient" placeholder="0.70" required>
+                </div>
+            </div>
+
+            <div class="form-section-title">Drainage Data</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Pipe Diameter <span>m</span></label>
+                    <input type="number" step="0.01" min="0.01" name="diameter" id="diameter" placeholder="0.60" required>
+                </div>
+                <div class="form-group">
+                    <label>Pipe Slope <span>m/m</span></label>
+                    <input type="number" step="0.0001" min="0.0001" name="slope" id="slope" placeholder="0.005" required>
+                </div>
+                <div class="form-group">
+                    <label>Manning Roughness <span>n</span></label>
+                    <input type="number" step="0.001" min="0.001" name="roughness" id="roughness" placeholder="0.013" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea name="notes" rows="3" placeholder="รายละเอียดเพิ่มเติมของการวิเคราะห์..."></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-light" id="previewBtn">Preview Calculation</button>
+                <button type="submit" class="btn btn-primary">Calculate & Save</button>
+            </div>
+        </form>
+    </section>
+
+    <aside class="analysis-side">
+        <div class="panel formula-card">
+            <div class="eyebrow">METHOD 01</div>
+            <h3>Rational Method</h3>
+            <div class="formula">Q = 0.00278 CIA</div>
+            <p>ประมาณปริมาณน้ำไหลบ่าเมื่อ I เป็น mm/hr และ A เป็น hectares</p>
+        </div>
+        <div class="panel formula-card">
+            <div class="eyebrow">METHOD 02</div>
+            <h3>Manning Equation</h3>
+            <div class="formula">Q = (1/n)AR<sup>2/3</sup>S<sup>1/2</sup></div>
+            <p>ประเมินความสามารถในการระบายน้ำของท่อกลมแบบไหลเต็มหน้าตัด</p>
+        </div>
+        <div class="panel safety-card">
+            <strong>Engineering Note</strong>
+            <p>ผลลัพธ์เป็น Prototype สำหรับการเรียนรู้ ควรตรวจสอบข้อมูลและมาตรฐานวิศวกรรมก่อนใช้ในงานจริง</p>
+        </div>
+    </aside>
+</div>
+
+{% if result %}
+<section class="result-section">
+    <div class="result-header">
+        <div><div class="eyebrow">ANALYSIS RESULT</div><h2>ผลการวิเคราะห์</h2></div>
+        <span class="risk-pill large {{ result.risk_level|lower }}">{{ result.risk_level }}</span>
+    </div>
+    <div class="result-grid">
+        <div class="result-card"><small>Estimated Runoff</small><strong>{{ "%.4f"|format(result.runoff) }}</strong><span>m³/s</span></div>
+        <div class="result-card"><small>Pipe Capacity</small><strong>{{ "%.4f"|format(result.pipe_capacity) }}</strong><span>m³/s</span></div>
+        <div class="result-card"><small>Utilization</small><strong>{{ "%.2f"|format(result.utilization) }}</strong><span>%</span></div>
+    </div>
+</section>
+{% endif %}
+
+<div class="modal" id="previewModal">
+    <div class="modal-box">
+        <button class="modal-close" id="modalClose">×</button>
+        <div class="eyebrow">CALCULATION PREVIEW</div>
+        <h2>ผลคำนวณก่อนบันทึก</h2>
+        <div id="previewContent"></div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+window.analysisApi = "{{ url_for('api_calculate') }}";
+</script>
+{% endblock %}

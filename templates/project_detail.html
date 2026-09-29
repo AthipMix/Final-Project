@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }}{% endblock %}
+{% block breadcrumb %}Projects / Detail{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">PROJECT DETAIL</div>
+        <h1>{{ project.name }}</h1>
+        <p>⌖ {{ project.location }} · {{ project.status }}</p>
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('analysis') }}">+ New Analysis</a>
+</div>
+
+<div class="detail-grid">
+    <section class="panel">
+        <div class="panel-header"><div><h2>Project Information</h2><p>ข้อมูลโครงการ</p></div></div>
+        <div class="detail-info">
+            <div><small>Location</small><strong>{{ project.location }}</strong></div>
+            <div><small>Status</small><strong>{{ project.status }}</strong></div>
+            <div class="wide"><small>Description</small><p>{{ project.description or "ไม่มีรายละเอียด" }}</p></div>
+        </div>
+    </section>
+    <section class="panel">
+        <div class="panel-header"><div><h2>Drainage Assets</h2><p>Assets ในโครงการนี้</p></div></div>
+        {% for asset in assets %}
+        <div class="mini-row"><b>{{ asset.asset_code }}</b><span>{{ asset.asset_type }} · {{ asset.diameter }} m</span><span class="condition">{{ asset.condition }}</span></div>
+        {% else %}
+        <div class="empty">ยังไม่มี Asset</div>
+        {% endfor %}
+    </section>
+</div>
+
+<section class="panel">
+    <div class="panel-header"><div><h2>Analysis History</h2><p>ประวัติการวิเคราะห์ของโครงการ</p></div></div>
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Date</th><th>Rainfall</th><th>Runoff</th><th>Capacity</th><th>Utilization</th><th>Risk</th></tr></thead>
+        <tbody>
+        {% for row in analyses %}
+        <tr>
+            <td>{{ row.created_at }}</td>
+            <td>{{ row.rainfall }} mm/hr</td>
+            <td>{{ "%.3f"|format(row.runoff) }}</td>
+            <td>{{ "%.3f"|format(row.pipe_capacity) }}</td>
+            <td>{{ "%.1f"|format(row.utilization) }}%</td>
+            <td><span class="risk-pill {{ row.risk_level|lower }}">{{ row.risk_level }}</span></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="empty">ยังไม่มีการวิเคราะห์สำหรับโครงการนี้</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+{% endblock %}

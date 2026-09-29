@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block breadcrumb %}Settings{% endblock %}
+
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">SYSTEM CONFIGURATION</div><h1>Settings</h1><p>การตั้งค่าพื้นฐานของระบบ</p></div></div>
+
+<div class="settings-grid">
+    <section class="panel">
+        <div class="panel-header"><div><h2>Application</h2><p>ข้อมูลทั่วไป</p></div></div>
+        <div class="setting-row"><div><b>Application Name</b><small>ชื่อระบบที่แสดงใน UI</small></div><span>FloodGuard</span></div>
+        <div class="setting-row"><div><b>Database</b><small>ฐานข้อมูลที่ใช้งาน</small></div><span>SQLite</span></div>
+        <div class="setting-row"><div><b>Environment</b><small>โหมดสำหรับ Prototype</small></div><span>Development</span></div>
+    </section>
+    <section class="panel">
+        <div class="panel-header"><div><h2>Risk Threshold</h2><p>เกณฑ์ใน Prototype</p></div></div>
+        <div class="setting-row"><div><b>Low</b><small>Utilization</small></div><span>&lt; 50%</span></div>
+        <div class="setting-row"><div><b>Moderate</b><small>Utilization</small></div><span>50–74%</span></div>
+        <div class="setting-row"><div><b>High</b><small>Utilization</small></div><span>75–89%</span></div>
+        <div class="setting-row"><div><b>Critical</b><small>Utilization</small></div><span>≥ 90%</span></div>
+    </section>
+</div>
+{% endblock %}

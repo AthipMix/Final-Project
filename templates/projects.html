@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Projects{% endblock %}
+{% block breadcrumb %}Projects{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div><div class="eyebrow">PROJECT MANAGEMENT</div><h1>Projects</h1><p>จัดการพื้นที่และโครงการที่ต้องการวิเคราะห์</p></div>
+    <button class="btn btn-primary" data-open-modal="projectModal">+ New Project</button>
+</div>
+
+<section class="project-grid">
+{% for project in projects %}
+<article class="project-card">
+    <div class="project-card-top">
+        <span class="project-badge">{{ project.status }}</span>
+        <span class="project-id">#{{ "%03d"|format(project.id) }}</span>
+    </div>
+    <h2>{{ project.name }}</h2>
+    <p class="location">⌖ {{ project.location }}</p>
+    <p>{{ project.description or "ไม่มีคำอธิบาย" }}</p>
+    <div class="project-stats">
+        <span><b>{{ project.analysis_count }}</b> Analyses</span>
+        <span><b>{{ project.asset_count }}</b> Assets</span>
+    </div>
+    <div class="card-actions">
+        <a href="{{ url_for('project_detail', project_id=project.id) }}" class="btn btn-light">View Detail</a>
+        <form method="POST" action="{{ url_for('delete_project', project_id=project.id) }}" onsubmit="return confirm('ต้องการลบโครงการนี้หรือไม่?')">
+            <button class="btn btn-danger-outline">Delete</button>
+        </form>
+    </div>
+</article>
+{% else %}
+<div class="empty-card">ยังไม่มีโครงการ</div>
+{% endfor %}
+</section>
+
+<div class="modal" id="projectModal">
+    <div class="modal-box">
+        <button class="modal-close" data-close-modal>×</button>
+        <div class="eyebrow">CREATE PROJECT</div>
+        <h2>สร้างโครงการใหม่</h2>
+        <form method="POST" action="{{ url_for('create_project') }}">
+            <div class="form-group"><label>Project Name</label><input name="name" required placeholder="เช่น Zone B Flood Prevention"></div>
+            <div class="form-group"><label>Location</label><input name="location" required placeholder="เช่น Nakhon Pathom"></div>
+            <div class="form-group"><label>Status</label><select name="status"><option>Planning</option><option>Active</option><option>Completed</option></select></div>
+            <div class="form-group"><label>Description</label><textarea name="description" rows="4"></textarea></div>
+            <button class="btn btn-primary full">Create Project</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

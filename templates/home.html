@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}หน้าแรก{% endblock %}
+{% block breadcrumb %}Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <div class="eyebrow">FLOOD & DRAINAGE INTELLIGENCE</div>
+        <h1>วิเคราะห์น้ำท่วม<br><span>จัดการระบบระบายน้ำ</span></h1>
+        <p>
+            ระบบสำหรับวิเคราะห์ปริมาณน้ำไหลบ่า ประเมินความสามารถของท่อ
+            ติดตามระดับความเสี่ยง และจัดการข้อมูลโครงการจากฐานข้อมูลเดียว
+        </p>
+        <div class="hero-actions">
+            <a class="btn btn-primary" href="{{ url_for('analysis') }}">เริ่มวิเคราะห์</a>
+            <a class="btn btn-light" href="{{ url_for('dashboard') }}">ดู Dashboard</a>
+        </div>
+        <div class="hero-note">
+            <span class="pulse"></span>
+            Rational Method + Manning Equation + Risk Analysis
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="water-card">
+            <div class="water-top">
+                <span>LIVE OVERVIEW</span>
+                <span class="online">● Online</span>
+            </div>
+            <div class="wave-chart">
+                <div class="chart-grid"></div>
+                <svg viewBox="0 0 500 210" preserveAspectRatio="none">
+                    <path d="M0 165 C70 150 70 120 130 135 S210 180 270 135 S360 55 425 105 S470 125 500 85"
+                          fill="none" stroke="currentColor" stroke-width="5"/>
+                </svg>
+            </div>
+            <div class="water-metrics">
+                <div><small>RUNOFF</small><strong>— m³/s</strong></div>
+                <div><small>CAPACITY</small><strong>— m³/s</strong></div>
+                <div><small>RISK</small><strong>Ready</strong></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading center">
+        <div class="eyebrow">WHAT YOU CAN DO</div>
+        <h2>ระบบเดียวสำหรับงานวิเคราะห์และจัดการ</h2>
+        <p>ออกแบบให้ใช้งานตั้งแต่การเตรียมข้อมูลจนถึงการดูรายงานย้อนหลัง</p>
+    </div>
+
+    <div class="feature-grid">
+        <article class="feature-card">
+            <div class="feature-icon">◉</div>
+            <h3>Flood Risk Analysis</h3>
+            <p>คำนวณ Runoff ด้วย Rational Method และประเมินความสามารถของท่อด้วย Manning Equation</p>
+            <a href="{{ url_for('analysis') }}">เริ่มวิเคราะห์ →</a>
+        </article>
+        <article class="feature-card">
+            <div class="feature-icon">⌁</div>
+            <h3>Drainage Management</h3>
+            <p>จัดเก็บข้อมูลท่อ จุดระบายน้ำ Asset Code และสภาพของระบบระบายน้ำ</p>
+            <a href="{{ url_for('drainage') }}">จัดการ Assets →</a>
+        </article>
+        <article class="feature-card">
+            <div class="feature-icon">□</div>
+            <h3>Project Management</h3>
+            <p>แยกข้อมูลตามโครงการและดูประวัติการวิเคราะห์ของแต่ละพื้นที่</p>
+            <a href="{{ url_for('projects') }}">ดู Projects →</a>
+        </article>
+    </div>
+</section>
+
+<section class="method-section">
+    <div>
+        <div class="eyebrow">HOW IT WORKS</div>
+        <h2>จากข้อมูลฝนสู่ระดับความเสี่ยง</h2>
+        <p>ระบบนำข้อมูลพื้นที่และฝนมาประเมินปริมาณน้ำ แล้วเปรียบเทียบกับความสามารถของระบบระบายน้ำ</p>
+    </div>
+    <div class="flow">
+        <div><b>01</b><span>Rainfall<br>& Area</span></div>
+        <i>→</i>
+        <div><b>02</b><span>Rational<br>Method</span></div>
+        <i>→</i>
+        <div><b>03</b><span>Manning<br>Equation</span></div>
+        <i>→</i>
+        <div><b>04</b><span>Risk<br>Level</span></div>
+    </div>
+</section>
+{% endblock %}

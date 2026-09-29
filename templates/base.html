@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="th">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}FloodGuard{% endblock %} | Flood & Drainage System</title>
+    <meta name="description" content="ระบบวิเคราะห์น้ำท่วมและระบบระบายน้ำ">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <div class="brand-mark">≈</div>
+            <div>
+                <strong>FloodGuard</strong>
+                <span>Flood & Drainage</span>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <div class="nav-label">MAIN</div>
+            <a class="nav-link {% if request.endpoint == 'home' %}active{% endif %}" href="{{ url_for('home') }}">
+                <span>⌂</span> หน้าแรก
+            </a>
+            <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">
+                <span>▦</span> Dashboard
+            </a>
+            <a class="nav-link {% if request.endpoint == 'analysis' %}active{% endif %}" href="{{ url_for('analysis') }}">
+                <span>◉</span> Flood Risk Analysis
+            </a>
+
+            <div class="nav-label">MANAGEMENT</div>
+            <a class="nav-link {% if request.endpoint in ['projects','project_detail'] %}active{% endif %}" href="{{ url_for('projects') }}">
+                <span>□</span> Projects
+            </a>
+            <a class="nav-link {% if request.endpoint == 'drainage' %}active{% endif %}" href="{{ url_for('drainage') }}">
+                <span>⌁</span> Drainage System
+            </a>
+            <a class="nav-link {% if request.endpoint == 'reports' %}active{% endif %}" href="{{ url_for('reports') }}">
+                <span>▤</span> Reports
+            </a>
+
+            <div class="nav-label">SYSTEM</div>
+            <a class="nav-link {% if request.endpoint == 'about' %}active{% endif %}" href="{{ url_for('about') }}">
+                <span>?</span> Documentation
+            </a>
+            <a class="nav-link {% if request.endpoint == 'settings' %}active{% endif %}" href="{{ url_for('settings') }}">
+                <span>⚙</span> Settings
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="status-dot"></div>
+            <div>
+                <strong>System Online</strong>
+                <span>SQLite Database</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <div class="breadcrumb">
+                <span>FloodGuard</span>
+                <b>/</b>
+                {% block breadcrumb %}System{% endblock %}
+            </div>
+            <div class="topbar-actions">
+                <a href="{{ url_for('analysis') }}" class="top-action">+ New Analysis</a>
+            </div>
+        </header>
+
+        <div class="page-wrap">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-stack">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

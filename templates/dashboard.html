@@ -1,0 +1,200 @@
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block
+breadcrumb %}Dashboard{% endblock %} {% block content %}
+<div class="page-heading">
+  <div>
+    <div class="eyebrow">SYSTEM OVERVIEW</div>
+    <h1>Dashboard</h1>
+    <p>ภาพรวมข้อมูลการวิเคราะห์น้ำท่วมและระบบระบายน้ำ</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('analysis') }}">+ New Analysis</a>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <span class="stat-icon blue" aria-hidden="true" style="display:flex; align-items:center; justify-content:center;">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M4 19V5"></path>
+        <path d="M4 19h16"></path>
+        <path d="m7 15 4-5 3 3 5-7"></path>
+      </svg>
+    </span>
+    <div>
+      <small>Total Analysis</small><strong>{{ stats.total_analysis }}</strong
+      ><span>รายการวิเคราะห์</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon purple" aria-hidden="true" style="display:flex; align-items:center; justify-content:center;">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M3 9.5 12 3l9 6.5"></path>
+        <path d="M5 9v11h14V9"></path>
+        <path d="M9 20v-6h6v6"></path>
+      </svg>
+    </span>
+    <div>
+      <small>Projects</small><strong>{{ stats.total_projects }}</strong
+      ><span>โครงการ</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon cyan" aria-hidden="true" style="display:flex; align-items:center; justify-content:center;">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M3 8h18"></path>
+        <path d="M3 16h18"></path>
+        <path d="M7 8v8"></path>
+        <path d="M17 8v8"></path>
+        <path d="M5 5h14v14H5z"></path>
+      </svg>
+    </span>
+    <div>
+      <small>Drainage Assets</small><strong>{{ stats.total_assets }}</strong
+      ><span>ระบบระบายน้ำ</span>
+    </div>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon red" aria-hidden="true" style="display:flex; align-items:center; justify-content:center;">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M10.3 3.5 2.4 17a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.5a2 2 0 0 0-3.4 0Z"
+        ></path>
+        <path d="M12 9v4"></path>
+        <path d="M12 17h.01"></path>
+      </svg>
+    </span>
+    <div>
+      <small>Critical Cases</small><strong>{{ stats.critical }}</strong
+      ><span>ต้องติดตาม</span>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <section class="panel chart-panel">
+    <div class="panel-header">
+      <div>
+        <h2>Risk Distribution</h2>
+        <p>สรุปจำนวนการวิเคราะห์ตามระดับความเสี่ยง</p>
+      </div>
+    </div>
+    <div class="risk-bars">
+      {% set total = risk_summary.Low + risk_summary.Moderate +
+      risk_summary.High + risk_summary.Critical %} {% for name in
+      ['Low','Moderate','High','Critical'] %} {% set value = risk_summary[name]
+      %} {% set percent = (value / total * 100) if total else 0 %}
+      <div class="risk-row">
+        <div class="risk-name">
+          <span class="risk-dot {{ name|lower }}"></span>{{ name }}<b
+            >{{ value }}</b
+          >
+        </div>
+        <div class="bar">
+          <span class="{{ name|lower }}" style="width: {{ percent }}%"></span>
+        </div>
+        <small>{{ "%.0f"|format(percent) }}%</small>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Risk Guide</h2>
+        <p>แนวทางอ่านผลจาก Utilization</p>
+      </div>
+    </div>
+    <div class="guide-list">
+      <div>
+        <span class="risk-pill low">LOW</span><b>&lt; 50%</b
+        ><small>ยังมี Capacity เหลือ</small>
+      </div>
+      <div>
+        <span class="risk-pill moderate">MODERATE</span><b>50–74%</b
+        ><small>ควรติดตาม</small>
+      </div>
+      <div>
+        <span class="risk-pill high">HIGH</span><b>75–89%</b
+        ><small>เข้าใกล้ขีดจำกัด</small>
+      </div>
+      <div>
+        <span class="risk-pill critical">CRITICAL</span><b>≥ 90%</b
+        ><small>ต้องตรวจสอบ</small>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="panel">
+  <div class="panel-header">
+    <div>
+      <h2>Recent Analysis</h2>
+      <p>รายการวิเคราะห์ล่าสุดจากฐานข้อมูล</p>
+    </div>
+    <a href="{{ url_for('reports') }}" class="text-link">View all →</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Runoff</th>
+          <th>Capacity</th>
+          <th>Utilization</th>
+          <th>Risk</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in recent %}
+        <tr>
+          <td><strong>{{ row.project_name }}</strong></td>
+          <td>{{ "%.3f"|format(row.runoff) }} m³/s</td>
+          <td>{{ "%.3f"|format(row.pipe_capacity) }} m³/s</td>
+          <td>{{ "%.1f"|format(row.utilization) }}%</td>
+          <td>
+            <span class="risk-pill {{ row.risk_level|lower }}"
+              >{{ row.risk_level }}</span
+            >
+          </td>
+          <td>{{ row.created_at }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="empty">
+            ยังไม่มีประวัติการวิเคราะห์ — เริ่มวิเคราะห์รายการแรกได้เลย
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

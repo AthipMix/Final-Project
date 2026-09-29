@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Documentation{% endblock %}
+{% block breadcrumb %}Documentation{% endblock %}
+
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">DOCUMENTATION</div><h1>About & Engineering Methods</h1><p>แนวคิดและหลักการทำงานของ FloodGuard</p></div></div>
+
+<div class="docs-grid">
+    <article class="panel doc-card">
+        <div class="doc-number">01</div>
+        <h2>Rational Method</h2>
+        <div class="formula">Q = 0.00278 C I A</div>
+        <p>ใช้ประมาณ Peak Runoff โดยในระบบนี้ I มีหน่วย mm/hr และ A มีหน่วย hectares</p>
+        <ul><li>Q = Runoff (m³/s)</li><li>C = Runoff Coefficient</li><li>I = Rainfall Intensity</li><li>A = Catchment Area</li></ul>
+    </article>
+
+    <article class="panel doc-card">
+        <div class="doc-number">02</div>
+        <h2>Manning Equation</h2>
+        <div class="formula">Q = (1/n)AR<sup>2/3</sup>S<sup>1/2</sup></div>
+        <p>ใช้ประมาณความสามารถของท่อกลมแบบไหลเต็มหน้าตัด</p>
+        <ul><li>n = Roughness Coefficient</li><li>A = Cross-sectional Area</li><li>R = Hydraulic Radius</li><li>S = Pipe Slope</li></ul>
+    </article>
+
+    <article class="panel doc-card">
+        <div class="doc-number">03</div>
+        <h2>Risk Level</h2>
+        <p>ระบบเปรียบเทียบ Runoff กับ Pipe Capacity แล้วคำนวณ Utilization</p>
+        <div class="formula">Utilization = Runoff / Capacity × 100</div>
+        <ul><li>Low: &lt; 50%</li><li>Moderate: 50–74%</li><li>High: 75–89%</li><li>Critical: ≥ 90%</li></ul>
+    </article>
+
+    <article class="panel doc-card">
+        <div class="doc-number">04</div>
+        <h2>Architecture</h2>
+        <p>แยก Route ออกจาก Business Logic เพื่อให้โครงสร้างเหมาะกับ OOP / OOAD</p>
+        <pre>Flask Route
+    ↓
+Service Layer
+    ↓
+SQLite Database</pre>
+    </article>
+</div>
+
+<div class="notice">
+    <strong>ข้อจำกัดสำคัญ</strong>
+    <p>ระบบนี้เป็น Prototype สำหรับการศึกษาและสาธิตแนวคิดการวิเคราะห์ ไม่ใช่โปรแกรมออกแบบระบบระบายน้ำสำหรับงานก่อสร้างจริง ค่าฝนออกแบบ, watershed, boundary conditions และเกณฑ์ความเสี่ยงควรผ่านการตรวจสอบโดยวิศวกรและมาตรฐานที่เกี่ยวข้อง</p>
+</div>
+{% endblock %}
